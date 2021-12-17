@@ -88,9 +88,12 @@ mod_temp(){
     CURDATE=`date +%s`
     columns="host=${ROUTER_MODEL}"
 
-    p1=`wl -i eth6 phy_tempsense | awk '{ print $1 * .5 + 20 }'` # 2.4GHz
-    p2=`wl -i eth7 phy_tempsense | awk '{ print $1 * .5 + 20 }'` # 5.0GHz
-    cpu=$(cat /sys/class/thermal/thermal_zone0/temp | awk '{print $1 / 1000}') # cpu thanks helkaluin 
+    #p1=`wl -i eth1 phy_tempsense | awk '{ print $1 * .5 + 20 }'` # 2.4GHz
+    #p2=`wl -i eth2 phy_tempsense | awk '{ print $1 * .5 + 20 }'` # 5.0GHz
+    p1=`wl -i eth1 phy_tempsense | awk '{ print $1 * 9/5 + 32}'` #2.4GHz 
+    p2=`wl -i eth2 phy_tempsense | awk '{ print $1 * 9/5 + 32}'` #5.0GHz 
+    #cpu=$(cat /sys/class/thermal/thermal_zone0/temp | awk '{print $1 / 1000}') # cpu thanks helkaluin 
+    cpu=$(head -1 /proc/dmu/temperature | awk '{ print $4 }' | sed 's/..$//' | awk '{ print $1 * 9/5 + 32}')  
     mod_temp_data="$name,${columns} temp_24=$p1,temp_50=$p2,temp_cpu=$cpu ${CURDATE}000000000"
     Print_Output "$SCRIPT_debug" "$mod_temp_data" "$WARN"
     $dir/export.sh "$mod_temp_data" "$SCRIPT_debug"
@@ -157,8 +160,8 @@ mod_connections(){
     CURDATE=`date +%s`
     active_dhcp_leases=$(cat /var/lib/misc/dnsmasq.leases| wc -l)
     mod_connected_clients=$(arp -a -n | awk '$4!="<incomplete>"' | wc -l)
-    wifi_24=`wl -i eth6 assoclist | awk '{print $2}' | wc -l`
-    wifi_5=`wl -i eth7 assoclist | awk '{print $2}' | wc -l`
+    wifi_24=`wl -i eth1 assoclist | awk '{print $2}' | wc -l`
+    wifi_5=`wl -i eth2 assoclist | awk '{print $2}' | wc -l`
 
 
     name="router.connections"

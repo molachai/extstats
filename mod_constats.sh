@@ -22,7 +22,7 @@
 
 	#Script Settings
 	readonly TEMP_FOLDER="/opt/tmp"
-	readonly DBFILE_ORG="/jffs/addons/connmon.d/connstats.db"
+	readonly DBFILE_ORG="/tmp/mnt/routerUSB/entware/share/connmon.d/connstats.db"
 	readonly DBFILE_COPY="$TEMP_FOLDER/$MOD_NAME.db"
 	readonly CSV_TEMP_FILE="$TEMP_FOLDER/$MOD_NAME.csv"
 	readonly TABLE="connstats"
@@ -116,7 +116,7 @@ sqlite3 $DBFILE_COPY <<!
 .headers on
 .mode csv
 .output $CSV_TEMP_FILE
-select StatID,strftime('%Y-%m-%d %H:%M:%S', datetime(Timestamp, 'unixepoch')) as Timestamp,Ping,Jitter,Packet_Loss from $TABLE;
+select StatID,strftime('%Y-%m-%d %H:%M:%S', datetime(Timestamp, 'unixepoch')) as Timestamp,Ping,Jitter,LineQuality from $TABLE;
 !
 
 fi
@@ -129,7 +129,7 @@ sqlite3 $DBFILE_COPY <<!
 .headers on
 .mode csv
 .output $CSV_TEMP_FILE
-select  StatID,strftime('%Y-%m-%d %H:%M:%S', datetime(Timestamp, 'unixepoch')) as Timestamp,Ping,Jitter,Packet_Loss from $TABLE WHERE Timestamp >= $STARTDATE ;
+select  StatID,strftime('%Y-%m-%d %H:%M:%S', datetime(Timestamp, 'unixepoch')) as Timestamp,Ping,Jitter,LineQuality from $TABLE WHERE Timestamp >= $STARTDATE ;
 !
 
 fi
@@ -179,7 +179,7 @@ if [ -f "$CSV_TEMP_FILE" ]; then
 		$DB_MODE \
 		$SSL_MODE \
 		$SSL_NOVERIFIY \
-		--fieldcolumns Timestamp,Ping,Jitter,Packet_Loss \
+		--fieldcolumns Timestamp,Ping,Jitter,LineQuality \
 		--metricname $INFLUX_DB_METRIC_NAME \
 		--batchsize 6000  \
 		-tc Timestamp \

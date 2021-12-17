@@ -19,7 +19,7 @@
 
 	#Script Settings
 	readonly TEMP_FOLDER="/opt/tmp"
-	readonly DBFILE_ORG="/jffs/addons/spdmerlin.d/spdstats.db"
+	readonly DBFILE_ORG="/tmp/mnt/routerUSB/entware/share/spdmerlin.d/spdstats.db"
 	readonly DBFILE_COPY="$TEMP_FOLDER/$MOD_NAME.db"
 	readonly CSV_TEMP_FILE="$TEMP_FOLDER/$MOD_NAME.csv"
 	readonly TABLE="spdstats_WAN"
@@ -164,7 +164,7 @@ if [ "$EXTS_USESSH" = "true" ]; then
 fi
 
 if [ "$EXTS_NOVERIFIY" = "true" ]; then
-	SSL_VERIFY="--verify_ssl"
+	SSL_VERIFY="--noverify"
 fi
 
 #--tagcolumns "host=${ROUTER_MODEL},table=${TABLE}" \ //ToDo 
